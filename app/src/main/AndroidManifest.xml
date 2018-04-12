@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="fan.componentsdemo">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".service.ServiceActivity" />
+        <activity android:name=".broardcast.BroardCastActivity" />
+        <activity android:name=".contentprovider.ContentProviderActivity" />
+
+        <service android:name=".service.Myservice" />
+
+        <receiver android:name=".broardcast.AirPlaneModeBoardCast">
+            <intent-filter>
+                <action android:name="android.intent.action.AIRPLANE_MODE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".broardcast.MyBroardCast">
+            <intent-filter>
+                <action android:name="TESTBOARD" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name=".contentprovider.MyContentProvider"
+            android:authorities="fan.componentsdemo"
+            android:exported="true"
+            android:readPermission="com.fan.READ" />
+
+        <service
+            android:name=".service.MyBindBinderService"
+            android:enabled="true"
+            android:exported="true"></service>
+        <service
+            android:name=".service.MyBindMessengerService"
+            android:enabled="true"
+            android:exported="true"></service>
+    </application>
+
+</manifest>
