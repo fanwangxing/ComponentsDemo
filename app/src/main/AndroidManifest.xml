@@ -28,7 +28,7 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".broardcast.MyBroardCast">
-            <intent-filter>
+            <intent-filter android:priority="10">
                 <action android:name="TESTBOARD" />
             </intent-filter>
         </receiver>
@@ -42,11 +42,20 @@
         <service
             android:name=".service.MyBindBinderService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
         <service
             android:name=".service.MyBindMessengerService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <receiver
+            android:name=".broardcast.MyBoardCast2"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter android:priority="2">
+                <action android:name="TESTBOARD" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

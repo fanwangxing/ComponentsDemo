@@ -22,6 +22,8 @@ import fan.componentsdemo.R;
 public class ServiceActivity extends AppCompatActivity implements View.OnClickListener {
     private Intent intent;
     private Intent bindIntent;
+    private Intent bindMessengerIntent;
+    private Intent bindBinderIntent;
     private Button start;
     private Button stop;
     private Button bind_binder;
@@ -31,8 +33,6 @@ public class ServiceActivity extends AppCompatActivity implements View.OnClickLi
     private Button getdata;
     private Button senddata;
     private TextView show;
-    private ServiceConnection binderServiceConnection;
-    private ServiceConnection messengerServiceConnection;
     private MyBindBinderService myBindService;
     private Messenger messenger;
     Messenger clientMessenger = new Messenger(new Handler() {
@@ -48,6 +48,31 @@ public class ServiceActivity extends AppCompatActivity implements View.OnClickLi
         }
     });
 
+    private ServiceConnection messengerServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            messenger = new Messenger(iBinder);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            messenger = null;
+        }
+    };
+   private ServiceConnection binderServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            //Binder通讯方式
+            MyBindBinderService.LocalBinder localBinder = (MyBindBinderService.LocalBinder) iBinder;
+            myBindService = localBinder.getService();
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+            myBindService = null;
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,40 +111,15 @@ public class ServiceActivity extends AppCompatActivity implements View.OnClickLi
 
 
     private void bindBinderService() {
-        binderServiceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                //Binder通讯方式
-                MyBindBinderService.LocalBinder localBinder = (MyBindBinderService.LocalBinder) iBinder;
-                myBindService = localBinder.getService();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-
-            }
-        };
-        Intent bindBinderIntent = new Intent();
+        bindBinderIntent = new Intent();
         bindBinderIntent.setClass(this, MyBindBinderService.class);
-        bindBinderIntent.putExtra("name", "fan");
         bindService(bindBinderIntent, binderServiceConnection, Service.BIND_AUTO_CREATE);
 
     }
     private void bindMessengerService() {
-        messengerServiceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-                messenger = new Messenger(iBinder);
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName componentName) {
-
-            }
-        };
-        Intent bindBinderIntent = new Intent();
-        bindBinderIntent.setClass(this, MyBindBinderService.class);
-        bindService(bindBinderIntent, messengerServiceConnection, Service.BIND_AUTO_CREATE);
+        bindMessengerIntent = new Intent();
+        bindMessengerIntent.setClass(this, MyBindMessengerService.class);
+        bindService(bindMessengerIntent, messengerServiceConnection, Service.BIND_AUTO_CREATE);
 
     }
     private void startService() {
@@ -154,6 +154,7 @@ public class ServiceActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.unbind_binder:
                 unbindService(binderServiceConnection);
+                stopService(bindBinderIntent);
                 Toast.makeText(this,"解除Binder绑定",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.bind_messenger:
@@ -162,6 +163,7 @@ public class ServiceActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.unbind_messenger:
                 unbindService(messengerServiceConnection);
+                stopService(bindMessengerIntent);
                 Toast.makeText(this,"解除Messenger绑定",Toast.LENGTH_SHORT).show();
                 break;
             case R.id.getdata:

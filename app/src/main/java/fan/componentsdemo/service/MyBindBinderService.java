@@ -18,8 +18,6 @@ public class MyBindBinderService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        String name = intent.getExtras().getString("name");
-        Log.e("test","onBind:"+name);
         return localBinder;
     }
 

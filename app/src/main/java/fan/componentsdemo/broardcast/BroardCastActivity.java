@@ -26,7 +26,7 @@ public class BroardCastActivity extends AppCompatActivity implements View.OnClic
                 Intent boardIntent = new Intent();
                 boardIntent.setAction("TESTBOARD");
                 boardIntent.putExtra("board","自定义广播数据");
-                sendBroadcast(boardIntent);
+                sendOrderedBroadcast(boardIntent,null);
                 break;
         }
     }

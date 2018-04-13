@@ -61,7 +61,7 @@ public class ContentProviderActivity extends AppCompatActivity implements View.O
     private String query(){
         Cursor cursor = getContentResolver().query(MyContentProvider.BOOK_URI, null, null, null, null);
         cursor.moveToLast();
-        String value = cursor.getString(2);
+        String value = cursor.getString(1);
         cursor.close();
         return value;
     }
